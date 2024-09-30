@@ -80,6 +80,7 @@ class LoginFormNotifier extends StateNotifier<LoginFormState> {
     );
   }
   onFormSubmit( ) async {
+    print('test');
     _touchEveryField();
     if ( !state.isValid ) return;
     state = state.copyWith(
