@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:teslo_shop/config/constants/environment.dart';
 
 import 'package:teslo_shop/features/products/domain/domain.dart';
+import '../mappers/product_mapper.dart';
 
 class ProductsDatasourceImpl extends ProductsDatasource {
 
@@ -39,7 +40,7 @@ class ProductsDatasourceImpl extends ProductsDatasource {
       final List<Product> products  = [];
 
       for (final product in response.data ?? []) {
-        // products.add( product );
+        products.add( ProductMapper.jsonToEntity( product ) );
       }
       return products;
     } catch (e) {
