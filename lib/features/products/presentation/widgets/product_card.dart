@@ -44,6 +44,7 @@ class _ImageViewer extends StatelessWidget {
         height: 250,
         fadeOutDuration: const Duration( milliseconds: 100),
         fadeInDuration: const Duration(milliseconds: 200),
+        // image: const NetworkImage( 'https://e.rpp-noticias.io/xlarge/2022/03/22/304130_1235390.jpg' ) ,
         image: NetworkImage( images.first ) ,
         placeholder: const AssetImage('assets/loaders/bottle-loader.gif'),
         imageErrorBuilder: (context, error, stackTrace) => Image.asset('assets/images/no-image.jpg', fit: BoxFit.cover, height: 250,),

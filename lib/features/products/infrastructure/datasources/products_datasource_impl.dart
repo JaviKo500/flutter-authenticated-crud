@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-
 import 'package:teslo_shop/config/constants/environment.dart';
 
 import 'package:teslo_shop/features/products/domain/domain.dart';
