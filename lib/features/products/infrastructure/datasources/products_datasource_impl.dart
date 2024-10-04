@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 
 import 'package:teslo_shop/config/constants/environment.dart';
 
@@ -7,19 +6,17 @@ import 'package:teslo_shop/features/products/domain/domain.dart';
 import '../mappers/product_mapper.dart';
 
 class ProductsDatasourceImpl extends ProductsDatasource {
-
   late final Dio dio;
-  final String  accessToken;
-  ProductsDatasourceImpl({
-    required this.accessToken
-  }): dio = Dio(
-    BaseOptions(
-      baseUrl: Environment.apiUrl,
-      headers: {
-        'Authorization': 'Bearer $accessToken',
-      },
-    ),
-  );
+  final String accessToken;
+  ProductsDatasourceImpl({required this.accessToken})
+      : dio = Dio(
+          BaseOptions(
+            baseUrl: Environment.apiUrl,
+            headers: {
+              'Authorization': 'Bearer $accessToken',
+            },
+          ),
+        );
 
   @override
   Future<Product> createUpdateProduct(Map<String, dynamic> productLike) {
@@ -34,21 +31,16 @@ class ProductsDatasourceImpl extends ProductsDatasource {
   }
 
   @override
-  Future<List<Product>> getProductsByPage({int limit = 10, int offset = 0}) async {
-    try {
-      final response = await dio.get('/api/products?limit=$limit&offset=$offset');
-      final List<Product> products  = [];
+  Future<List<Product>> getProductsByPage(
+      {int limit = 10, int offset = 1}) async {
+      final response =
+        await dio.get<List>('/products?limit=$limit&offset=$offset');
+    final List<Product> products = [];
 
-      for (final product in response.data ?? []) {
-        products.add( ProductMapper.jsonToEntity( product ) );
-      }
-      return products;
-    } catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
-      return [];
+    for (final product in response.data ?? []) {
+      products.add(ProductMapper.jsonToEntity(product));
     }
+    return products;
   }
 
   @override
@@ -56,6 +48,4 @@ class ProductsDatasourceImpl extends ProductsDatasource {
     // TODO: implement searchProductByTerm
     throw UnimplementedError();
   }
-  
-  
 }

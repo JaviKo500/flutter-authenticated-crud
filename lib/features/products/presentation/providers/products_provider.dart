@@ -55,7 +55,7 @@ class ProductsState {
   ProductsState({
     this.isLastPage = false, 
     this.limit = 10, 
-    this.offset = 0, 
+    this.offset = 1, 
     this.isLoading = false, 
     this.products = const [],
   });
