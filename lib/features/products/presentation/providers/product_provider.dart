@@ -3,39 +3,47 @@ import 'package:teslo_shop/features/products/domain/domain.dart';
 
 import 'products_repository_provider.dart';
 
-final productProvider = StateNotifierProvider.autoDispose.family<ProductNotifier, ProductState, String >
-  ((ref, productId) {
 
-    final productRepository = ref.watch( productsRepositoryProvider );
+final productProvider = StateNotifierProvider.autoDispose.family<ProductNotifier, ProductState, String>(
+  (ref, productId ) {
+    final productsRepository = ref.watch(productsRepositoryProvider);
     return ProductNotifier(
-      productId: productId, 
-      productsRepository: productRepository,
+      productsRepository: productsRepository, 
+      productId: productId
     );
-  });
+});
+
+
 
 class ProductNotifier extends StateNotifier<ProductState> {
+
   final ProductsRepository productsRepository;
-  ProductNotifier({ 
+
+  ProductNotifier({
     required this.productsRepository,
     required String productId,
-  }): super( ProductState( id: productId ) ){
+  }): super(ProductState(id: productId )) {
     loadProduct();
   }
+
 
   Future<void> loadProduct () async {
     try {
       final product = await productsRepository.getProductById( state.id );
-      state.copyWith(
+
+      state = state.copyWith(
         isLoading: false,
         product: product,
       );
     } catch (e) {
+      // 404 product not found
       print(e);
     }
   }
 }
 
 class ProductState {
+
   final String id;
   final Product? product;
   final bool isLoading;
@@ -55,9 +63,9 @@ class ProductState {
     bool? isSaving,
   }) => ProductState(
     id: id ?? this.id,
+    product: product ?? this.product,
     isLoading: isLoading ?? this.isLoading,
     isSaving: isSaving ?? this.isSaving,
-    product: product ?? this.product,
   );
   
 }
