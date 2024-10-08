@@ -1,38 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:teslo_shop/features/products/presentation/providers/providers.dart';
+import 'package:teslo_shop/features/products/presentation/providers/product_provider.dart';
 
 
-class ProductScreen extends ConsumerStatefulWidget {
-  final String prodId;
-  const ProductScreen ({required this.prodId, super.key});
-
-  @override
-  ProductScreenState createState() => ProductScreenState();
-}
-
-class ProductScreenState extends ConsumerState<ProductScreen> {
+class ProductScreen extends ConsumerWidget {
+  final String productId;
+  const ProductScreen ({Key? key, required this.productId}) : super(key: key);
 
   @override
-  void initState() {
-    super.initState();
-    ref.read( productProvider( widget.prodId ) );
-  }
-  
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final productState = ref.watch( productProvider( productId ) );
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Edit Product',
+          'Edit product',
           style: TextStyle()
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              
+            }, 
+            icon: const Icon(Icons.camera_alt_outlined),
+          )
+        ],
       ),
       body: Center(
-        child: Text(
-          widget.prodId,
-          style: const TextStyle()
-        ),
+        child: Text('Hello World ${productState.id} ${ productState.product?.title ?? ''}'),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          
+        },
+        child: const Icon(Icons.save_as_outlined),
       ),
     );
   }
