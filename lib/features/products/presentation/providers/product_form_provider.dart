@@ -48,12 +48,13 @@ class ProductFormNotifier extends StateNotifier<ProductFormState> {
         'sizes': state.sizes,
         'gender': state.gender.split(','),
         'description': state.description,
+        'tags': state.tags.split(',').map( (tag) => tag.trim()).toList(),
         'images': state.images.map(
             (image) => image.replaceAll('${Environment.apiUrl}/files/product/', '')
           ).toList(),
       }
     };
-    
+    print(productLike);
     return true;
   }
   void _touchedEverything(){
