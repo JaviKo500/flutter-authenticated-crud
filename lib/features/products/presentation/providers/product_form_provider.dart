@@ -7,7 +7,12 @@ import 'package:teslo_shop/features/products/domain/domain.dart';
 import 'package:teslo_shop/features/shared/infrastructure/inputs/inputs.dart';
 import 'package:teslo_shop/features/shared/shared.dart';
 
-
+final productFormProvider = StateNotifierProvider.autoDispose.family<ProductFormNotifier, ProductFormState, Product>((ref, product) {
+  // final callback = 
+  return ProductFormNotifier(
+    product: product
+  );
+});
 
 class ProductFormNotifier extends StateNotifier<ProductFormState> {
 
@@ -48,7 +53,7 @@ class ProductFormNotifier extends StateNotifier<ProductFormState> {
           ).toList(),
       }
     };
-
+    
     return true;
   }
   void _touchedEverything(){
