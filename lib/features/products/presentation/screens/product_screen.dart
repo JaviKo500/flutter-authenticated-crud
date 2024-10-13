@@ -111,7 +111,7 @@ class _ProductInformation extends ConsumerWidget {
             label: 'Precio',
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             initialValue: productForm.price.value.toString(),
-            onChanged:( value ) =>  ref.read( productFormProvider( product ).notifier ).onPriceChange( double.tryParse(value) ?? 0 ),
+            onChanged:( value ) =>  ref.read( productFormProvider( product ).notifier ).onPriceChange( double.tryParse(value) ?? -1 ),
             errorMessage: productForm.price.errorMessage,
           ),
 
@@ -129,7 +129,7 @@ class _ProductInformation extends ConsumerWidget {
             label: 'Existencias',
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             initialValue: productForm.inStock.value.toString(),
-            onChanged: (value) => ref.read( productFormProvider( product ).notifier ).onStockChange( int.tryParse(value) ?? 0 ),
+            onChanged: (value) => ref.read( productFormProvider( product ).notifier ).onStockChange( int.tryParse(value) ?? -1 ),
             errorMessage: productForm.inStock.errorMessage,
           ),
 
