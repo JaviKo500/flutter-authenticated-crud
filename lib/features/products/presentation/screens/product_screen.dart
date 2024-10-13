@@ -118,9 +118,15 @@ class _ProductInformation extends ConsumerWidget {
           const SizedBox(height: 15 ),
           const Text('Extras'),
 
-          _SizeSelector(selectedSizes: productForm.sizes ),
+          _SizeSelector(
+            selectedSizes: productForm.sizes,
+            onSizesChanged: ref.read( productFormProvider( product ).notifier ).onSizeChange,
+          ),
           const SizedBox(height: 5 ),
-          _GenderSelector( selectedGender: productForm.gender ),
+          _GenderSelector( 
+            selectedGender: productForm.gender, 
+            onGenderChanged: ref.read( productFormProvider( product ).notifier ).onGenderChange,
+          ),
           
 
           const SizedBox(height: 15 ),
@@ -138,6 +144,7 @@ class _ProductInformation extends ConsumerWidget {
             label: 'Descripción',
             keyboardType: TextInputType.multiline,
             initialValue: product.description,
+            onChanged: ref.read( productFormProvider( product ).notifier ).onDescriptionChange,
           ),
 
           CustomProductField( 
@@ -145,7 +152,8 @@ class _ProductInformation extends ConsumerWidget {
             maxLines: 2,
             label: 'Tags (Separados por coma)',
             keyboardType: TextInputType.multiline,
-            initialValue: productForm.tags
+            initialValue: productForm.tags,
+            onChanged: ref.read( productFormProvider( product ).notifier ).onTagsChange,
           ),
 
 
@@ -161,7 +169,8 @@ class _SizeSelector extends StatelessWidget {
   final List<String> selectedSizes;
   final List<String> sizes = const['XS','S','M','L','XL','XXL','XXXL'];
 
-  const _SizeSelector({required this.selectedSizes});
+  final Function( List<String> selectedSizes ) onSizesChanged;
+  const _SizeSelector({required this.selectedSizes, required this.onSizesChanged});
 
 
   @override
@@ -177,7 +186,7 @@ class _SizeSelector extends StatelessWidget {
       }).toList(), 
       selected: Set.from( selectedSizes ),
       onSelectionChanged: (newSelection) {
-        print(newSelection);
+        onSizesChanged( List.from( newSelection ) );
       },
       multiSelectionEnabled: true,
     );
@@ -187,13 +196,14 @@ class _SizeSelector extends StatelessWidget {
 class _GenderSelector extends StatelessWidget {
   final String selectedGender;
   final List<String> genders = const['men','women','kid'];
+  final Function( String gender ) onGenderChanged;
   final List<IconData> genderIcons = const[
     Icons.man,
     Icons.woman,
     Icons.boy,
   ];
 
-  const _GenderSelector({required this.selectedGender});
+  const _GenderSelector({required this.selectedGender, required this.onGenderChanged});
 
 
   @override
@@ -213,7 +223,7 @@ class _GenderSelector extends StatelessWidget {
         }).toList(), 
         selected: { selectedGender },
         onSelectionChanged: (newSelection) {
-          print(newSelection);
+          onGenderChanged( newSelection.first );
         },
       ),
     );
