@@ -2,6 +2,7 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:formz/formz.dart';
+import 'package:teslo_shop/config/config.dart';
 import 'package:teslo_shop/features/products/domain/domain.dart';
 import 'package:teslo_shop/features/shared/infrastructure/inputs/inputs.dart';
 import 'package:teslo_shop/features/shared/shared.dart';
@@ -27,6 +28,39 @@ class ProductFormNotifier extends StateNotifier<ProductFormState> {
     tags: product.tags.join(', '),
     images: product.images,
   ));
+
+  Future<bool> onFormSubmit() async {
+    _touchedEverything();
+    if( !state.isFormValid ) return false;
+    if ( onSubmitCallback == null ) return false;
+    final productLike = {
+      {
+        'id': state.id,
+        'title': state.title.value,
+        'price': state.price.value,
+        'slug': state.slug.value,
+        'stock': state.inStock.value,
+        'sizes': state.sizes,
+        'gender': state.gender.split(','),
+        'description': state.description,
+        'images': state.images.map(
+            (image) => image.replaceAll('${Environment.apiUrl}/files/product/', '')
+          ).toList(),
+      }
+    };
+
+    return true;
+  }
+  void _touchedEverything(){
+    state = state.copyWith(
+      isFormValid: Formz.validate([
+        Title.dirty(state.title.value),
+        Slug.dirty(state.slug.value),
+        Price.dirty(state.price.value),
+        Stock.dirty(state.inStock.value),
+      ])
+    );
+  }
   
   void onTitleChange ( String value ) {
     state = state.copyWith(
@@ -73,6 +107,30 @@ class ProductFormNotifier extends StateNotifier<ProductFormState> {
         Price.dirty(state.price.value),
         Stock.dirty(value),
       ])
+    );
+  }
+
+  void onSizeChange ( List<String> sizes ) {
+    state = state.copyWith(
+      sizes: sizes,
+    );
+  }
+
+  void onGenderChange ( String gender ) {
+    state = state.copyWith(
+      gender: gender,
+    );
+  }
+
+  void onDescriptionChange ( String description ) {
+    state = state.copyWith(
+      description: description,
+    );
+  }
+
+  void onTagsChange ( String tags ) {
+    state = state.copyWith(
+      tags: tags,
     );
   }
 }
