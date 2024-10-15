@@ -10,10 +10,10 @@ class ProductScreen extends ConsumerWidget {
   final String productId;
   const ProductScreen ({Key? key, required this.productId}) : super(key: key);
 
-  void showSnackBar( BuildContext context ) {
+  void showSnackBar( BuildContext context, String message ) {
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text( 'Product updated' ))
+      SnackBar(content: Text( message ))
     );
   }
   @override
@@ -45,7 +45,8 @@ class ProductScreen extends ConsumerWidget {
             ref.read( productFormProvider( productState.product! ).notifier )
             .onFormSubmit().then( (value) {
               if( !value ) return;
-              showSnackBar(context);
+              final message = productId == 'new' ? 'Product created' : 'Product updated';
+              showSnackBar(context, message);
             }, );
 
           }
