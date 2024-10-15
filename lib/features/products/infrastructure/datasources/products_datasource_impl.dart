@@ -36,6 +36,7 @@ class ProductsDatasourceImpl extends ProductsDatasource {
       final product = ProductMapper.jsonToEntity(response.data);
       return product;
     } catch (e) {
+      print(e);
       throw Exception();
     }
   }

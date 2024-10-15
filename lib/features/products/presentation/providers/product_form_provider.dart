@@ -4,19 +4,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:formz/formz.dart';
 import 'package:teslo_shop/config/config.dart';
 import 'package:teslo_shop/features/products/domain/domain.dart';
+import 'package:teslo_shop/features/products/presentation/providers/providers.dart';
 import 'package:teslo_shop/features/shared/infrastructure/inputs/inputs.dart';
 import 'package:teslo_shop/features/shared/shared.dart';
 
 final productFormProvider = StateNotifierProvider.autoDispose.family<ProductFormNotifier, ProductFormState, Product>((ref, product) {
-  // final callback = 
+  final createUpdateCallback = ref.watch( productsRepositoryProvider ).createUpdateProduct;
   return ProductFormNotifier(
-    product: product
+    product: product,
+    onSubmitCallback: createUpdateCallback,
   );
 });
 
 class ProductFormNotifier extends StateNotifier<ProductFormState> {
 
-  final void Function( Map<String, dynamic> productLike)? onSubmitCallback;
+  final Future<Product> Function( Map<String, dynamic> productLike)? onSubmitCallback;
   final Product product;
   ProductFormNotifier({
     this.onSubmitCallback,
@@ -39,22 +41,25 @@ class ProductFormNotifier extends StateNotifier<ProductFormState> {
     if( !state.isFormValid ) return false;
     if ( onSubmitCallback == null ) return false;
     final productLike = {
-      {
-        'id': state.id,
-        'title': state.title.value,
-        'price': state.price.value,
-        'slug': state.slug.value,
-        'stock': state.inStock.value,
-        'sizes': state.sizes,
-        'gender': state.gender.split(','),
-        'description': state.description,
-        'tags': state.tags.split(',').map( (tag) => tag.trim()).toList(),
-        'images': state.images.map(
-            (image) => image.replaceAll('${Environment.apiUrl}/files/product/', '')
-          ).toList(),
-      }
+      'id': state.id,
+      'title': state.title.value,
+      'price': state.price.value,
+      'slug': state.slug.value,
+      'stock': state.inStock.value,
+      'sizes': state.sizes,
+      'gender': state.gender,
+      'description': state.description,
+      'tags': state.tags.split(',').map( (tag) => tag.trim()).toList(),
+      'images': state.images.map(
+          (image) => image.replaceAll('${Environment.apiUrl}/files/product/', '')
+        ).toList(),
     };
     print(productLike);
+    try {
+      await onSubmitCallback!(productLike);
+    } catch (e) {
+      return false;
+    }
     return true;
   }
   void _touchedEverything(){
