@@ -29,10 +29,20 @@ class ProductScreen extends ConsumerWidget {
           ),
           actions: [
             IconButton(
-              onPressed: () {
-                
+              onPressed: () async {
+                final photo = await CameraGalleryServiceImpl().takePhoto();
+                if ( photo == null ) return;
+                photo;
               }, 
               icon: const Icon(Icons.camera_alt_outlined),
+            ),
+            IconButton(
+              onPressed: () async {
+                final photo = await CameraGalleryServiceImpl().selectPhoto();
+                if ( photo == null ) return;
+                photo;
+              }, 
+              icon: const Icon(Icons.photo_library_rounded),
             )
           ],
         ),
