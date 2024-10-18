@@ -30,17 +30,17 @@ class ProductScreen extends ConsumerWidget {
           actions: [
             IconButton(
               onPressed: () async {
-                final photo = await CameraGalleryServiceImpl().takePhoto();
-                if ( photo == null ) return;
-                photo;
+                final photoPath = await CameraGalleryServiceImpl().takePhoto();
+                if ( photoPath == null ) return;
+                photoPath;
               }, 
               icon: const Icon(Icons.camera_alt_outlined),
             ),
             IconButton(
               onPressed: () async {
-                final photo = await CameraGalleryServiceImpl().selectPhoto();
-                if ( photo == null ) return;
-                photo;
+                final photoPath = await CameraGalleryServiceImpl().selectPhoto();
+                if ( photoPath == null ) return;
+                photoPath;
               }, 
               icon: const Icon(Icons.photo_library_rounded),
             )
