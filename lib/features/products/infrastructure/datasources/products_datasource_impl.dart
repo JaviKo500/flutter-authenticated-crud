@@ -26,6 +26,8 @@ class ProductsDatasourceImpl extends ProductsDatasource {
       final String url = productId.isEmpty ? '/products' : '/products/$productId';
 
       productLike.remove('id');
+      productLike['images'] = await _uploadPhotos( productLike['images'] );
+      // throw Exception();
       final response = await dio.request(
         url,
         data: productLike,
@@ -74,5 +76,27 @@ class ProductsDatasourceImpl extends ProductsDatasource {
   Future<List<Product>> searchProductByTerm(String term) {
     // TODO: implement searchProductByTerm
     throw UnimplementedError();
+  }
+
+  Future<List<String>> _uploadPhotos ( List<String> photos ) async {
+    final photosToUpload = photos.where((element) => !element.contains('http')).toList();
+    final photosToIgnore = photos.where((element) => element.contains('http')).toList();
+    final List<Future<String>> uploadJob = photosToUpload.map( _uploadFile).toList();
+    final newImages = await Future.wait( uploadJob );
+    return [ ...photosToIgnore, ...newImages ];
+  }
+
+  Future<String> _uploadFile ( String path ) async {
+    try {
+      final fileName = path.split('/').last;
+      final contentType = path.split('.').last;
+      final FormData data = FormData.fromMap({
+        'file': MultipartFile.fromFileSync(path, filename: fileName, contentType: DioMediaType( 'image', contentType ))
+      });
+      final response = await dio.post( '/files/product', data: data);
+      return response.data['image'];
+    } catch (e) {
+      throw Exception();
+    }
   }
 }

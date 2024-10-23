@@ -286,6 +286,7 @@ class _ImageGallery extends StatelessWidget {
         viewportFraction: 0.7
       ),
       children: images.map((image){
+        print(image);
         late ImageProvider imageProvider;
         if ( image.startsWith('http') ) {
           imageProvider = NetworkImage(image);
